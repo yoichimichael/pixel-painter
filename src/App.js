@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   cell: {
     height: theme.spacing(7),
     width: theme.spacing(7),
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
     border: '1px solid black', 
   },
   board: {
@@ -31,13 +31,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const DEFAULT_BOARD = Array(10).fill(0).map(r => Array(10).fill(0));
+const DEFAULT_BOARD = Array(10).fill(0).map(r => Array(10).fill(''));
 
-function Cell(){
+function Cell({ coords, backgroundColor, paintCell }){
   const classes = useStyles();
 
   return (
-    <Box className={classes.cell}></Box>
+    <Box onClick={() => paintCell(coords[0], coords[1])} className={classes.cell} style={{backgroundColor}}></Box>
   )
 }
 
@@ -55,6 +55,14 @@ function Board(){
     setBoard(DEFAULT_BOARD);
   }, [])
   
+  function paintCell(r, c){
+    const newBoard = [...board];
+    const newRow = [...newBoard[r]];
+    newRow[c] = cellColor; 
+    newBoard[r] = newRow;
+    setBoard(newBoard);
+  } 
+
   return (
     <Box className={classes.board}>
       <TextField 
@@ -63,7 +71,7 @@ function Board(){
         value={cellColor}
         onChange={(e) => setCellColor(e.target.value)}></TextField>
       <Box style={styles}>
-        {board ? board.map((row, r) => row.map((col, c) => <Cell key={`${r}-${c}`}/>)) : null}
+        {board ? board.map((row, r) => row.map((col, c) => <Cell key={`${r}-${c}`} coords={[r, c]} backgroundColor={board[r][c]} paintCell={paintCell}/>)) : null}
       </Box>
     </Box>
   )
