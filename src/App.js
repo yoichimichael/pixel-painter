@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
     border: '1px solid black', 
   },
   board: {
-    
+    display: "flex",
+    flexDirection: "column",
   },
   colorInput: {
     border: '1px solid black'
@@ -42,6 +43,7 @@ function Cell(){
 
 function Board(){
   const [board, setBoard] = useState(null);
+  const [cellColor, setCellColor] = useState('');
 
   const classes = useStyles();
   const styles = {
@@ -52,14 +54,18 @@ function Board(){
   useEffect(() => {
     setBoard(DEFAULT_BOARD);
   }, [])
-
+  
   return (
-    <>
-      <TextField fullwidth className={classes.colorInput}></TextField>
-      <Box className={classes.board} style={styles}>
+    <Box className={classes.board}>
+      <TextField 
+        fullwidth="true"
+        className={classes.colorInput}
+        value={cellColor}
+        onChange={(e) => setCellColor(e.target.value)}></TextField>
+      <Box style={styles}>
         {board ? board.map((row, r) => row.map((col, c) => <Cell key={`${r}-${c}`}/>)) : null}
       </Box>
-    </>
+    </Box>
   )
 }
 
@@ -70,7 +76,7 @@ function App() {
       <header className="App-header">
         <Typography variant='h1' component='h1'>PIXEL PAINT</Typography>
       </header>
-      <Board/>
+      <Board />
     </div>
   );
 }
